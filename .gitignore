@@ -1,0 +1,13 @@
+node_modules
+*.log
+*.out
+*.pid
+npm-debug.log
+*~
+*#
+.DS_STORE
+.idea
+.node_history
+.env
+*.env
+yarn.lock
