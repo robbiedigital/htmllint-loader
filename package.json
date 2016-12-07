@@ -1,6 +1,6 @@
 {
   "name": "htmllint-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "htmllint loader",
   "main": "dist/htmllint-loader.js",
   "scripts": {
