@@ -1,5 +1,9 @@
 'use strict';
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _htmllint = require('htmllint');
 
 var _htmllint2 = _interopRequireDefault(_htmllint);
@@ -22,14 +26,177 @@ var _deasync = require('deasync');
 
 var _deasync2 = _interopRequireDefault(_deasync);
 
+var _htmlTags = require('html-tags');
+
+var _htmlTags2 = _interopRequireDefault(_htmlTags);
+
+var _textTable = require('text-table');
+
+var _textTable2 = _interopRequireDefault(_textTable);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function lint(source, options, webpack) {
-    var lintOptions = _fsExtra2.default.readJsonSync(options.config);
-    var content = _fsExtra2.default.readFileSync(options.resourcePath, 'utf8');
+var severity = {
+    'attr-bans': 'error',
+    'attr-name-style': 'warning',
+    'attr-new-line': 'warning',
+    'attr-no-dup': 'warning',
+    'attr-no-unsafe-char': 'error',
+    'attr-quote-style': 'error',
+    'attr-req-value': 'error',
+    'class-no-dup': 'warning',
+    'class-style': 'error',
+    'doctype-first': 'warning',
+    'doctype-html5': 'warning',
+    'fig-req-figcaption': 'error',
+    'focusable-tabindex-style': 'warning',
+    'head-req-title': 'error',
+    'href-style': 'error',
+    'html-req-lang': 'warning',
+    'id-class-no-ad': 'warning',
+    'id-no-dup': 'error',
+    'id-class-style': 'error',
+    'img-req-alt': 'warning',
+    'img-req-src': 'warning',
+    'indent-style': 'warning',
+    'input-radio-req-name': 'warning',
+    'input-req-label': 'error',
+    'label-req-for': 'warning',
+    'lang-style': 'warning',
+    'line-end-style': 'warning',
+    'line-max-len': 'error',
+    'page-title': 'warning',
+    'spec-char-escape': 'error',
+    'title-no-dup': 'warning',
+    'title-max-len': 'true',
+    'table-req-caption': 'warning',
+    'table-req-header': 'warning',
+    'tag-bans': 'error',
+    'tag-self-close': 'error',
+    'tag-close': 'error',
+    'tag-name-match': 'error',
+    'tag-name-lowercase': 'warning'
+};
+
+var isFile = function isFile(file) {
+    try {
+        return _fsExtra2.default.lstatSync(file).isFile();
+    } catch (e) {
+        return false;
+    }
+};
+
+var cleanContent = function cleanContent(content) {
+    var lines = content.split('\n');
+    var pattern = '';
+    var replace = '';
+
+    _lodash2.default.forEach(lines, function (line, i) {
+        lines[i] = lines[i].replace(/(<\?).*(\?>)/, 'php');
+
+        _lodash2.default.forEach(_htmlTags2.default, function (tag) {
+            if (tag.toLowerCase() !== 'title') {
+                pattern = new RegExp('(<' + tag + '>).*(</' + tag + '>)');
+                replace = '<' + tag + '></' + tag + '>';
+
+                lines[i] = lines[i].replace(pattern, replace);
+            }
+        });
+    });
+
+    return lines.join('\n');
+};
+
+var pluralize = function pluralize(_word, count) {
+    var word = _word;
+
+    if (count > 1) {
+        word += 's';
+    }
+
+    return word;
+};
+
+var stylish = function stylish(results) {
+    var errors = 0;
+    var warnings = 0;
+    var output = '';
+    var total = 0;
+    var summaryColor = 'yellow';
+    var messages = null;
+    var filename = null;
+    var tableOptions = null;
+    var fileOutput = null;
+    var styledOutput = null;
+    var tableLayout = null;
+    var format = null;
+
+    results.forEach(function (file) {
+        messages = file.messages;
+        filename = _chalk2.default.underline(file.filePath);
+        tableOptions = {
+            align: ['', '  ', 'r', 'l'],
+            stringLength: function stringLength(str) {
+                return _chalk2.default.stripColor(str).length;
+            }
+        };
+
+        fileOutput = '\n';
+
+        if (messages.length === 0) {
+            return;
+        }
+
+        total += messages.length;
+        styledOutput = messages.map(function (message) {
+            var messageType = 'unknown';
+
+            if (message.severity === 'error') {
+                messageType = _chalk2.default.red('error');
+                errors = errors + 1;
+            } else {
+                messageType = _chalk2.default.yellow('warning');
+                warnings = warnings + 1;
+            }
+
+            return ['', _chalk2.default.dim(message.line + ':' + message.column), messageType, _chalk2.default.dim(message.linter || ''), message.reason.replace(/\.$/, '')];
+        });
+        tableLayout = (0, _textTable2.default)(styledOutput, tableOptions);
+        format = tableLayout.split('\n');
+        format = format.join('\n') + '\n\n';
+        fileOutput += filename + '\n';
+        fileOutput += format;
+        output += fileOutput;
+    });
+
+    if (total > 0) {
+        var _bold = ['\u2716 ', total, pluralize(' problem', total), ' (', errors, pluralize(' error', errors), ', ', warnings, pluralize(' warning', warnings), ')\n'];
+
+        if (errors > 0) {
+            summaryColor = 'red';
+        }
+
+        output += _chalk2.default[summaryColor].bold(_bold.join(''));
+    }
+
+    return {
+        message: total > 0 ? output : '',
+        warnings: warnings,
+        errors: errors
+    };
+};
+
+var lint = function lint(source, options, webpack) {
     var messages = [];
-    var message = '';
+    var lintOptions = {};
     var done = false;
+    var content = _fsExtra2.default.readFileSync(options.resourcePath, 'utf8');
+
+    if (isFile(options.config)) {
+        lintOptions = _fsExtra2.default.readJsonSync(options.config);
+    }
+
+    content = cleanContent(content);
 
     (0, _htmllint2.default)(content, lintOptions).then(function (issues) {
         var _iteratorNormalCompletion = true;
@@ -40,11 +207,14 @@ function lint(source, options, webpack) {
             for (var _iterator = issues[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                 var issue = _step.value;
 
-                message = issue.msg || _htmllint2.default.messages.renderIssue(issue);
-
-                if (message) {
-                    messages.push([_chalk2.default.magenta(options.resourcePath), ': ', 'line ', issue.line, ', ', 'col ', issue.column, ', ', _chalk2.default.red(message), '\n'].join(''));
-                }
+                messages.push({
+                    line: issue.line,
+                    column: issue.column,
+                    length: 0,
+                    severity: severity[issue.rule],
+                    reason: _htmllint2.default.messages.renderIssue(issue),
+                    linter: issue.rule
+                });
             }
         } catch (err) {
             _didIteratorError = true;
@@ -62,6 +232,17 @@ function lint(source, options, webpack) {
         }
 
         done = true;
+    }, function (err) {
+        messages.push({
+            line: 0,
+            column: 0,
+            length: 0,
+            severity: 'warning',
+            reason: err.message,
+            linter: 'unknown'
+        });
+
+        done = true;
     });
 
     _deasync2.default.loopWhile(function () {
@@ -69,9 +250,20 @@ function lint(source, options, webpack) {
     });
 
     if (messages.length > 0) {
-        webpack.emitError(messages.join(''));
+        var formatted = stylish([{
+            filePath: options.resourcePath,
+            messages: messages
+        }]);
+
+        if (formatted.errors > 0 && options.failOnError) {
+            webpack.emitError(formatted.message);
+        } else if (formatted.warnings > 0 && options.failOnWarning) {
+            webpack.emitError(formatted.message);
+        } else if (formatted.warnings > 0) {
+            webpack.emitWarning(formatted.message);
+        }
     }
-}
+};
 
 module.exports = function htmlLint(source) {
     var options = (0, _objectAssign2.default)({
