@@ -4,16 +4,6 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _htmllint = require('htmllint');
-
-var _htmllint2 = _interopRequireDefault(_htmllint);
-
-var _fsExtra = require('fs-extra');
-
-var _fsExtra2 = _interopRequireDefault(_fsExtra);
-
-var _loaderUtils = require('loader-utils');
-
 var _objectAssign = require('object-assign');
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
@@ -25,6 +15,16 @@ var _chalk2 = _interopRequireDefault(_chalk);
 var _deasync = require('deasync');
 
 var _deasync2 = _interopRequireDefault(_deasync);
+
+var _fsExtra = require('fs-extra');
+
+var _fsExtra2 = _interopRequireDefault(_fsExtra);
+
+var _htmllint = require('htmllint');
+
+var _htmllint2 = _interopRequireDefault(_htmllint);
+
+var _loaderUtils = require('loader-utils');
 
 var _htmlTags = require('html-tags');
 
@@ -52,10 +52,10 @@ var cleanContent = function cleanContent(content) {
     var replace = '';
 
     _lodash2.default.forEach(lines, function (line, i) {
-        lines[i] = lines[i].replace('<?php', '');
-        lines[i] = lines[i].replace('<?=', '');
-        lines[i] = lines[i].replace('<?', '');
-        lines[i] = lines[i].replace('?>', '');
+        lines[i] = lines[i].replace('<?php', '    ');
+        lines[i] = lines[i].replace('<?=', '   ');
+        lines[i] = lines[i].replace('<?', '  ');
+        lines[i] = lines[i].replace('?>', '  ');
 
         _lodash2.default.forEach(_htmlTags2.default, function (tag) {
             if (tag.toLowerCase() !== 'title') {

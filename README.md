@@ -44,7 +44,6 @@ module.exports = {
           config: '.htmllintrc',
           failOnError: true,
           failOnWarning: false,
-          quiet: false,
         }
       }
     ]
