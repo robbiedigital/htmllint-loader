@@ -1,9 +1,9 @@
-> htmllint loader for webpack for [scss-lint](https://github.com/TheBlackBolt/htmllint-loader)
+> [htmllint loader](https://github.com/TheBlackBolt/htmllint-loader) for webpack
 
 ## [Install](https://github.com/TheBlackBolt/htmllint-loader)
 
 ```console
-$ npm install scsslint-hot-loader
+$ npm install htmllint-loader
 or
 $ yarn add htmllint-loader
 ```
@@ -11,7 +11,7 @@ $ yarn add htmllint-loader
 ## Usage
 [Documentation: using loaders](http://webpack.github.io/docs/using-loaders.html)
 
-Within your webpack configuration, you'll need to add the scsslint-loader to the list of modules:
+Within your webpack configuration, you'll need to add the htmllint-loader to the list of modules:
 
 ```javascript
 module.exports = {
