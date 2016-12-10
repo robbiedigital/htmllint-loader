@@ -52,7 +52,10 @@ var cleanContent = function cleanContent(content) {
     var replace = '';
 
     _lodash2.default.forEach(lines, function (line, i) {
-        lines[i] = lines[i].replace(/(<\?).*(\?>)/, 'php');
+        lines[i] = lines[i].replace('<?php', '');
+        lines[i] = lines[i].replace('<?=', '');
+        lines[i] = lines[i].replace('<?', '');
+        lines[i] = lines[i].replace('?>', '');
 
         _lodash2.default.forEach(_htmlTags2.default, function (tag) {
             if (tag.toLowerCase() !== 'title') {
