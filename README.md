@@ -1,5 +1,13 @@
 > [htmllint loader](https://github.com/TheBlackBolt/htmllint-loader) for webpack
 
+Source handlebars/php code:
+
+![](http://i.imgur.com/npHAmEy.png)
+
+Formatted errors:
+
+![](http://i.imgur.com/y3Ys8Au.png)
+
 ## [Install](https://github.com/TheBlackBolt/htmllint-loader)
 
 ```console
