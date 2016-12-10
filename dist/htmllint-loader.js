@@ -34,49 +34,9 @@ var _textTable = require('text-table');
 
 var _textTable2 = _interopRequireDefault(_textTable);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _config = require('./config');
 
-var severity = {
-    'attr-bans': 'error',
-    'attr-name-style': 'warning',
-    'attr-new-line': 'warning',
-    'attr-no-dup': 'warning',
-    'attr-no-unsafe-char': 'error',
-    'attr-quote-style': 'error',
-    'attr-req-value': 'error',
-    'class-no-dup': 'warning',
-    'class-style': 'error',
-    'doctype-first': 'warning',
-    'doctype-html5': 'warning',
-    'fig-req-figcaption': 'error',
-    'focusable-tabindex-style': 'warning',
-    'head-req-title': 'error',
-    'href-style': 'error',
-    'html-req-lang': 'warning',
-    'id-class-no-ad': 'warning',
-    'id-no-dup': 'error',
-    'id-class-style': 'error',
-    'img-req-alt': 'warning',
-    'img-req-src': 'warning',
-    'indent-style': 'warning',
-    'input-radio-req-name': 'warning',
-    'input-req-label': 'error',
-    'label-req-for': 'warning',
-    'lang-style': 'warning',
-    'line-end-style': 'warning',
-    'line-max-len': 'error',
-    'page-title': 'warning',
-    'spec-char-escape': 'error',
-    'title-no-dup': 'warning',
-    'title-max-len': 'true',
-    'table-req-caption': 'warning',
-    'table-req-header': 'warning',
-    'tag-bans': 'error',
-    'tag-self-close': 'error',
-    'tag-close': 'error',
-    'tag-name-match': 'error',
-    'tag-name-lowercase': 'warning'
-};
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var isFile = function isFile(file) {
     try {
@@ -188,12 +148,12 @@ var stylish = function stylish(results) {
 
 var lint = function lint(source, options, webpack) {
     var messages = [];
-    var lintOptions = {};
+    var lintOptions = _config.defaultOptions;
     var done = false;
     var content = _fsExtra2.default.readFileSync(options.resourcePath, 'utf8');
 
     if (isFile(options.config)) {
-        lintOptions = _fsExtra2.default.readJsonSync(options.config);
+        lintOptions = (0, _objectAssign2.default)(lintOptions, _fsExtra2.default.readJsonSync(options.config));
     }
 
     content = cleanContent(content);
@@ -211,7 +171,7 @@ var lint = function lint(source, options, webpack) {
                     line: issue.line,
                     column: issue.column,
                     length: 0,
-                    severity: severity[issue.rule],
+                    severity: _config.severity[issue.rule],
                     reason: _htmllint2.default.messages.renderIssue(issue),
                     linter: issue.rule
                 });
