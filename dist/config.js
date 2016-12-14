@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var defaultOptions = exports.defaultOptions = {
-    'attr-bans': ['align', 'background', 'bgcolor', 'border', 'dynsrc', 'frameborder', 'longdesc', 'lowsrc', 'onclick', 'ondblclick', 'onload', 'marginwidth', 'marginheight', 'scrolling', 'style', 'width'],
+    'attr-bans': ['align', 'background', 'bgcolor', 'border', 'dynsrc', 'frameborder', 'id', 'longdesc', 'lowsrc', 'onclick', 'ondblclick', 'onload', 'marginwidth', 'marginheight', 'scrolling', 'style', 'width'],
     'attr-name-ignore-regex': false,
     'attr-name-style': 'dash',
     'attr-no-dup': true,
@@ -71,9 +71,9 @@ var severity = exports.severity = {
     'id-class-no-ad': 'warning',
     'id-no-dup': 'error',
     'id-class-style': 'error',
-    'img-req-alt': 'warning',
-    'img-req-src': 'warning',
-    'indent-style': 'warning',
+    'img-req-alt': 'error',
+    'img-req-src': 'error',
+    'indent-style': 'error',
     'input-radio-req-name': 'warning',
     'input-req-label': 'error',
     'label-req-for': 'warning',

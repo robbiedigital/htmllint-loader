@@ -75,6 +75,7 @@ Default htmllint-loader options:
       "bgcolor",
       "border",
       "dynsrc",
+      "id",
       "frameborder",
       "longdesc",
       "lowsrc",
