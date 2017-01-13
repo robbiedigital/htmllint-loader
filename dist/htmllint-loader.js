@@ -1,8 +1,6 @@
 'use strict';
 
-var _lodash = require('lodash');
-
-var _lodash2 = _interopRequireDefault(_lodash);
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _objectAssign = require('object-assign');
 
@@ -26,10 +24,6 @@ var _htmllint2 = _interopRequireDefault(_htmllint);
 
 var _loaderUtils = require('loader-utils');
 
-var _htmlTags = require('html-tags');
-
-var _htmlTags2 = _interopRequireDefault(_htmlTags);
-
 var _textTable = require('text-table');
 
 var _textTable2 = _interopRequireDefault(_textTable);
@@ -48,25 +42,43 @@ var isFile = function isFile(file) {
 
 var cleanContent = function cleanContent(content) {
   var lines = content.split('\n');
-  var pattern = '';
-  var replace = '';
 
-  _lodash2.default.forEach(lines, function (line, i) {
-    lines[i] = lines[i].replace('<?php', '    ');
-    lines[i] = lines[i].replace('<?=', '   ');
-    lines[i] = lines[i].replace('<?', '  ');
-    lines[i] = lines[i].replace('?>', '  ');
-    lines[i] = lines[i].replace(/class="\{\{.*}}"/, 'class="temp"');
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
 
-    _lodash2.default.forEach(_htmlTags2.default, function (tag) {
-      if (tag.toLowerCase() !== 'title') {
-        pattern = new RegExp('(<' + tag + '>).*(</' + tag + '>)');
-        replace = '<' + tag + '></' + tag + '>';
+  try {
+    for (var _iterator = lines.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _step$value = _slicedToArray(_step.value, 2),
+          i = _step$value[0],
+          line = _step$value[1];
 
-        lines[i] = lines[i].replace(pattern, replace);
+      line = line.replace(/="{{.*}}"/, '="temp"');
+      line = line.replace(/="{{{.*}}}"/, '="temp"');
+      line = line.replace('<?php', '    ');
+      line = line.replace('<?=', '   ');
+      line = line.replace('<?', '  ');
+      line = line.replace('<%', '  ');
+      line = line.replace('%>', '  ');
+      line = line.replace('?>', '  ');
+      line = line.replace(/{{.*}}/g, '');
+      line = line.replace(/{{{.*}}}/g, '');
+      lines[i] = line;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
       }
-    });
-  });
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
 
   return lines.join('\n');
 };
@@ -163,13 +175,13 @@ var lint = function lint(source, options, webpack) {
   content = cleanContent(content);
 
   (0, _htmllint2.default)(content, lintOptions).then(function (issues) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
     try {
-      for (var _iterator = issues[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var issue = _step.value;
+      for (var _iterator2 = issues[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var issue = _step2.value;
 
         messages.push({
           line: issue.line,
@@ -181,16 +193,16 @@ var lint = function lint(source, options, webpack) {
         });
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
         }
       } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
+        if (_didIteratorError2) {
+          throw _iteratorError2;
         }
       }
     }
@@ -221,18 +233,47 @@ var lint = function lint(source, options, webpack) {
 
     if (formatted.errors > 0) {
       if (options.failOnError) {
-        throw new Error('Module failed because of a htmllint error.\n ' + formatted.message);
-      } else {
         webpack.emitError(formatted.message);
+
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error('Module failed because of a htmllint errors.\n ' + formatted.message);
+        }
+      } else {
+        webpack.emitWarning(formatted.message);
       }
     } else if (formatted.warnings > 0) {
       if (options.failOnWarning) {
-        throw new Error('Module failed because of a htmllint warning.\n ' + formatted.message);
+        webpack.emitError(formatted.message);
+
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error('Module failed because of a htmllint warnings.\n ' + formatted.message);
+        }
       } else {
         webpack.emitWarning(formatted.message);
       }
     }
   }
+
+  // if (res[0].messages.length > 0) {
+  //   const msg = this.stylish(res);
+  //   let type = 'warnings';
+  //
+  //   if (self.errors > 0) {
+  //     if (self.options.failOnError) {
+  //       type = 'errors';
+  //     }
+  //   } else if (self.warnings > 0) {
+  //     if (self.options.failOnWarning) {
+  //       type = 'errors';
+  //     }
+  //   }
+  //
+  //   compilation[type].push(new Error(msg));
+  //
+  //   if (compilation.bail) {
+  //     throw new Error(`Module failed because of a scsslint ${type}.\n ${msg}`);
+  //   }
+  // }
 };
 
 module.exports = function htmlLint(source) {
