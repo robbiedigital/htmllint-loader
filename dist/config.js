@@ -8,7 +8,7 @@ var defaultOptions = exports.defaultOptions = {
   'attr-name-ignore-regex': false,
   'attr-name-style': 'dash',
   'attr-no-dup': true,
-  'attr-no-unsafe-chars': true,
+  'attr-no-unsafe-char': true,
   'attr-quote-style': 'double',
   'attr-req-value': true,
   'class-no-dup': true,
