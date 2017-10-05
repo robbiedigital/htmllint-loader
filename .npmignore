@@ -1,2 +1,17 @@
+.DS_Store
+Desktop.ini
+thumbs.db
+.idea
+.env
+.git
+/node_modules
+*.log
+*.lock
+bower_components
 node_modules
+npm-debug.log
+*.log
+temp.*
 yarn.lock
+composer.lock
+.#*

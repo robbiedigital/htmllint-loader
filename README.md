@@ -1,4 +1,4 @@
-> [htmllint loader](https://github.com/TheBlackBolt/htmllint-loader) for webpack
+> [htmllint loader](https://github.com/TheBlackBolt/htmllint-loader) for webpack 1, 2 and 3
 
 ## Example
 Example handlebars/php code:
@@ -17,46 +17,90 @@ or
 $ yarn add htmllint-loader
 ```
 
-## Usage
+## Webpack 1.x Usage
 [Documentation: using loaders](http://webpack.github.io/docs/using-loaders.html)
 
-Within your webpack configuration, you'll need to add the htmllint-loader to the list of modules:
+Within your webpack configuration, you'll need to add the htmllint-loader to the list of module preloaders:
 
 ```javascript
 module.exports = {
   // ...
   module: {
-    preloaders: [
+    loaders: [
       {
-          test: /\(htm|html|xhtml|hbs|handlebars|php)$/,
+          test: /\(htm|html|xhtml|hbs|handlebars|php|ejs)$/,
           loader: "htmllint-loader",
           include: '_src/markup/',
-      }
-    ]
-  }
+      },
+    ],
+  },
   // ...
 }
 ```
 
-Optional query parameters:
+Optional query options:
 
 ```javascript
 module.exports = {
   // ...
   module: {
-    preloaders: [
+    loaders: [
       {
-        test: /\(htm|html|xhtml|hbs|handlebars|php)$/,
+        test: /\(htm|html|xhtml|hbs|handlebars|php|ejs)$/,
         loader: "htmllint-loader",
         include: '_src/markup/',
         query: {
           config: '.htmllintrc',
           failOnError: true,
           failOnWarning: false,
-        }
-      }
+        },
+      },
+    ],
+  },
+  // ...
+}
+```
+
+## Webpack 2.x & 3.x Usage
+[Documentation: using loaders](https://webpack.js.org/concepts/loaders/)
+
+Within your webpack configuration, you'll need to add the htmllint-loader to the list of module rules:
+
+```javascript
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /(htm|html|xhtml|hbs|handlebars|php|ejs)$/,
+        loader: 'htmllint-loader',
+        exclude: /(node_modules)/,
+      },
     ]
-  }
+  },
+  // ...
+}
+```
+
+Optional query options:
+
+```javascript
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /(htm|html|xhtml|hbs|handlebars|php|ejs)$/,
+        loader: 'htmllint-loader',
+        exclude: /(node_modules)/,
+        query: {
+          config: '.htmllintrc', // path to custom config file
+          failOnError: false,
+          failOnWarning: false,
+        },
+      },
+    ]
+  },
   // ...
 }
 ```
@@ -67,75 +111,75 @@ module.exports = {
 
 Default htmllint-loader options:
 
-```javascript
+```json
 {
-  "attr-bans": [
-      "align",
-      "background",
-      "bgcolor",
-      "border",
-      "dynsrc",
-      "id",
-      "frameborder",
-      "longdesc",
-      "lowsrc",
-      "onclick",
-      "ondblclick",
-      "onload",
-      "marginwidth",
-      "marginheight",
-      "scrolling",
-      "style",
-      "width"
-  ],
-  "attr-name-ignore-regex": false,
-  "attr-name-style": "dash",
-  "attr-no-dup": true,
-  "attr-no-unsafe-chars": true,
-  "attr-quote-style": "double",
-  "attr-req-value": true,
-  "class-no-dup": true,
-  "class-style": "dash",
-  "csslint": false,
-  "doctype-first": false,
-  "doctype-html5": false,
-  "fig-req-figcaption": true,
-  "focusable-tabindex-style": false,
-  "head-req-title": true,
-  "href-style": false,
-  "html-req-lang": true,
-  "id-class-ignore-regex": false,
-  "id-class-no-ad": true,
-  "id-class-style": "underscore",
-  "id-no-dup": true,
-  "input-radio-req-name": true,
-  "img-req-alt": true,
-  "img-req-src": true,
-  "indent-style": "spaces",
-  "indent-width": 2,
-  "indent-width-cont": true,
-  "input-req-label": false,
-  "label-req-for": true,
-  "lang-style": "case",
-  "line-end-style": "lf",
-  "line-max-len": 120,
-  "line-max-len-ignore-regex": "/href/g",
-  "page-title": true,
-  "spec-char-escape": true,
-  "table-req-caption": false,
-  "table-req-header": true,
-  "tag-bans": [
-      "b",
-      "i",
-      "keygen",
-      "style"
-  ],
-  "tag-close": true,
-  "tag-name-lowercase": true,
-  "tag-name-match": true,
-  "tag-self-close": "never",
-  "text-escape-spec-char": true,
-  "title-max-len": 60,
-  "title-no-dup": true
+    "attr-bans": [
+        "align",
+        "background",
+        "bgcolor",
+        "border",
+        "dynsrc",
+        "frameborder",
+        "longdesc",
+        "lowsrc",
+        "onclick",
+        "ondblclick",
+        "onload",
+        "marginwidth",
+        "marginheight",
+        "scrolling",
+        "style",
+        "width",
+        "height"
+    ],
+    "attr-name-ignore-regex": false,
+    "attr-name-style": "dash",
+    "attr-new-line": false,
+    "attr-no-dup": true,
+    "attr-no-unsafe-char": true,
+    "attr-order": false,
+    "attr-quote-style": "double",
+    "attr-req-value": false,
+    "class-no-dup": true,
+    "class-style": "bem",
+    "doctype-first": false,
+    "doctype-html5": false,
+    "fig-req-figcaption": true,
+    "focusable-tabindex-style": false,
+    "head-req-title": true,
+    "href-style": false,
+    "html-req-lang": true,
+    "id-class-ignore-regex": false,
+    "id-class-no-ad": true,
+    "id-class-style": "dash",
+    "id-no-dup": true,
+    "img-req-alt": "allownull",
+    "img-req-src": false,
+    "indent-style": "spaces",
+    "indent-width": 2,
+    "indent-width-cont": true,
+    "input-radio-req-name": true,
+    "input-req-label": false,
+    "label-req-for": false,
+    "lang-style": "case",
+    "line-end-style": false,
+    "line-max-len": false,
+    "line-max-len-ignore-regex": "/href/g",
+    "page-title": true,
+    "spec-char-escape": false,
+    "table-req-caption": false,
+    "table-req-header": false,
+    "tag-bans": [
+        "b",
+        "keygen",
+        "style"
+    ],
+    "tag-close": true,
+    "tag-name-lowercase": true,
+    "tag-name-match": true,
+    "tag-self-close": "always",
+    "text-escape-spec-char": true,
+    "title-max-len": 80,
+    "title-no-dup": true
 }
 ```
