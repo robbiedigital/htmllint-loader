@@ -109,7 +109,7 @@ module.exports = {
 `.htmllintrc` should live in your project root. This file should be a valid JSON file that contains options defined
 [on the htmllint wiki](https://github.com/htmllint/htmllint/wiki/Options).
 
-Default htmllint-loader options:
+Default htmllint-loader rules:
 
 ```json
 {
@@ -140,6 +140,7 @@ Default htmllint-loader options:
     "attr-order": false,
     "attr-quote-style": "double",
     "attr-req-value": false,
+    "attr-validate": false,
     "class-no-dup": true,
     "class-style": "bem",
     "doctype-first": false,
@@ -147,8 +148,10 @@ Default htmllint-loader options:
     "fig-req-figcaption": true,
     "focusable-tabindex-style": false,
     "head-req-title": true,
+    "head-valid-content-model": true,
     "href-style": false,
     "html-req-lang": true,
+    "html-valid-content-model": false,
     "id-class-ignore-regex": false,
     "id-class-no-ad": true,
     "id-class-style": "dash",
@@ -165,7 +168,8 @@ Default htmllint-loader options:
     "line-end-style": false,
     "line-max-len": false,
     "line-max-len-ignore-regex": "/href/g",
-    "page-title": true,
+    "maxerr": false,
+    "raw-ignore-regex": false,
     "spec-char-escape": false,
     "table-req-caption": false,
     "table-req-header": false,
@@ -178,7 +182,7 @@ Default htmllint-loader options:
     "tag-name-lowercase": true,
     "tag-name-match": true,
     "tag-self-close": "always",
-    "text-escape-spec-char": true,
+    "text-ignore-regex": false,
     "title-max-len": 80,
     "title-no-dup": true
 }
