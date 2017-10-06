@@ -1,5 +1,13 @@
 > [htmllint loader](https://github.com/TheBlackBolt/htmllint-loader) for webpack 1, 2 and 3
 
+## [Install](https://github.com/TheBlackBolt/htmllint-loader)
+
+```console
+$ npm install htmllint-loader
+or
+$ yarn add htmllint-loader
+```
+
 ## Example
 Example handlebars/php code:
 
@@ -9,12 +17,21 @@ Example error:
 
 ![](http://i.imgur.com/y3Ys8Au.png)
 
-## [Install](https://github.com/TheBlackBolt/htmllint-loader)
-
-```console
-$ npm install htmllint-loader
-or
-$ yarn add htmllint-loader
+## ignore code
+You can go ahead and ignore single and multiple lines of code.
+You can out the disable code inside of html comments, handlebars comments, or ejs comments.
+```html
+<h1>Main Title</h1> {{!htmllint:disable-line}}
+<h3>Multi-Column</h3> <!-- htmllint:disable-line -->
+<%# htmllint:disable %>
+<ul>
+  <li><a href="2-column">2 Column</a></li>
+  <li><a href="3-column">3 Column</a></li>
+  <li><a href="4-column">4 Column</a></li>
+  <li><a href="5-column">5 Column</a></li>
+  <li><a href="6-column">6 Column</a></li>
+</ul>
+<%# htmllint:enable %>
 ```
 
 ## Webpack 1.x Usage

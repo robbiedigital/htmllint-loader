@@ -158,15 +158,15 @@ const cleanContent = content => {
 
   /* eslint-disable no-div-regex */
   for (let [i, line] of lines.entries()) { // eslint-disable-line prefer-const
-    if (line.indexOf('{{!htmllint:disable}}') > -1) {
+    if (line.indexOf('htmllint:disable') > -1) {
       disabled = true;
     }
 
-    if (line.indexOf('{{!htmllint:enable}}') > -1) {
+    if (line.indexOf('htmllint:enable') > -1) {
       disabled = false;
     }
 
-    if (disabled || line.indexOf('{{!htmllint:disable-line}}') > -1) {
+    if (disabled || line.indexOf('htmllint:disable-line') > -1) {
       line = '';
     } else {
       line = cleanAttributes(line);
