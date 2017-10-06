@@ -30,15 +30,15 @@ const matchReplace = match => {
   }
 
   while (output.search(/<%=.*?%>/) >= 0) {
-    output = output.replace(/<%=.*?%>/, randomKey('handlebars'));
+    output = output.replace(/<%=.*?%>/, randomKey('ejs'));
   }
 
   while (output.search(/<%-.*?%>/) >= 0) {
-    output = output.replace(/<%-.*?%>/, randomKey('handlebars'));
+    output = output.replace(/<%-.*?%>/, randomKey('ejs'));
   }
 
   while (output.search(/<%.*?%>/) >= 0) {
-    output = output.replace(/<%.*?%>/, randomKey('handlebars'));
+    output = output.replace(/<%.*?%>/, randomKey('ejs'));
   }
 
   while (output.search(/<\?php.*?\?>/) >= 0) {
@@ -336,24 +336,22 @@ const lint = (source, options, webpack) => {
 
   htmllint(content, options.lintOptions).then(issues => {
     for (const issue of issues) {
-      let rule = '';
+      let rule = issue.rule;
 
-      switch (issue.code) {
+      switch (issue.code) { // eslint-disable-line default-case
       case 'E018':
         rule = 'tag-self-close';
         break;
       case 'E025':
         rule = 'html-req-lang';
         break;
-      default:
-        rule = severities[issue.rule] || 'unknown';
       }
 
       messages.push({
         line: issue.line,
         column: issue.column,
         length: 0,
-        severity: severities[rule],
+        severity: severities[rule] || 'warning',
         reason: htmllint.messages.renderIssue(issue),
         linter: rule,
       });
