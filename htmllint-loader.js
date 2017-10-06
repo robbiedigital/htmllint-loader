@@ -158,6 +158,11 @@ const cleanContent = content => {
 
   /* eslint-disable no-div-regex */
   for (let [i, line] of lines.entries()) { // eslint-disable-line prefer-const
+    if (line.indexOf('htmllint:disable-line') > -1) {
+      line = '';
+      continue; // eslint-disable-line no-continue
+    }
+
     if (line.indexOf('htmllint:disable') > -1) {
       disabled = true;
     }
@@ -166,7 +171,7 @@ const cleanContent = content => {
       disabled = false;
     }
 
-    if (disabled || line.indexOf('htmllint:disable-line') > -1) {
+    if (disabled) {
       line = '';
     } else {
       line = cleanAttributes(line);
