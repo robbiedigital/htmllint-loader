@@ -9,6 +9,15 @@ const table = require('text-table');
 const htmlAttributes = require('./html-attributes');
 const severities = require('./html-severities');
 
+const isFile = filePath => {
+  try {
+    return fs.lstatSync(filePath) // eslint-disable-line no-sync
+      .isFile();
+  } catch (e) {
+    return false;
+  }
+};
+
 const getRandomInt = (min, max) => {
   const minCeil = Math.ceil(min);
   const maxFloor = Math.floor(max);
@@ -411,9 +420,10 @@ const lint = (source, options, webpack) => {
 
 module.exports = function htmlLint(source) {
   const cwd = process.cwd();
+  const config = (isFile('.htmllintrc')) ? '.htmllintrc' : 'node_modules/htmllint-loader/.htmllintrc';
   const options = assign(
     {
-      config: 'node_modules/htmllint-loader/.htmllintrc',
+      config,
       failOnError: true,
       failWarning: false,
     },
