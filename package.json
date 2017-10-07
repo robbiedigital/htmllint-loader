@@ -10,6 +10,9 @@
   "keywords": [
     "webpack",
     "html",
+    "handlebars",
+    "hbs",
+    "ejs",
     "lint",
     "loader",
     "html-lint",
