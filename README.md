@@ -19,7 +19,7 @@ Example error:
 
 ## ignore code
 You can go ahead and ignore single and multiple lines of code.
-You can out the disable code inside of html comments, handlebars comments, or ejs comments.
+You can write the disable statement inside of html, handlebars, or ejs comments.
 ```html
 <h1>Main Title</h1> {{!htmllint:disable-line}}
 <h3>Multi-Column</h3> <!-- htmllint:disable-line -->
